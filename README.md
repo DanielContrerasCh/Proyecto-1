@@ -12,8 +12,10 @@ Var tamaño_snake = 2 cuadros
 
   Var velocidad_snake =  adelante 3 cuadros/segundo
   
-Movimiento_snake:
-
+  Movimiento_snake:
+  
+    Rastrear y seguir recorrido de cabeza_snake
+    
   Esperar tecla (flecha arriba) 
   
     Si direccion_snake = derecha = girar 90 grados izquierda
