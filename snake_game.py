@@ -1,5 +1,5 @@
 #librerías necesarias
-import pygame, sys, time, random
+import keyboard,pygame, sys, time, random
 
 #Estado inicial
 pygame.init()
@@ -8,8 +8,7 @@ superficie_juego= pygame.display.set_mode((500,500))
 font = pygame.font.Font(None, 30)
 
 fps = pygame.time.Clock()
-    # print("Bienvenidos al juego de la serpiente, usa las flechas para moverte")
-    # print("presione una flecha para empezar")
+
 
 #coordenadas y valores iniciales
 def posicion_fruta():
@@ -18,15 +17,15 @@ def posicion_fruta():
     pos_fruta = [posicion_random, posicion_random]
     return pos_fruta
 
-def puntuacion():
-    puntaje = 0
-    puntaje += 1
-    print(puntaje)
-    if puntaje < 10:
-        fps.tick(10)
-    if puntaje >= 10:
-        fps.tick(20)
-
+# def puntuacion(puntaje):
+#     puntaje += 1
+    # text = font.render(str(puntaje),0,(200,60,80))
+    # superficie_juego.blit(text, (480,20))
+    # return puntaje
+    # if puntaje < 10:
+    #     fps.tick(10)
+    # if puntaje >= 10:
+    #     fps.tick(20)
 
 def principal():
 
@@ -34,8 +33,9 @@ def principal():
     snake_body = [[100,50],[90,50],[80,50]]
     pos_fruta = posicion_fruta()
     cambio = "RIGHT"
+    # v_cambio = 0
     run = True
-    # puntaje = 0
+    puntaje = 0
 
     while run:
         for event in pygame.event.get():
@@ -44,29 +44,44 @@ def principal():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     cambio = "RIGHT"
-                elif event.key == pygame.K_LEFT:
+                if event.key == pygame.K_LEFT:
                     cambio = "LEFT"
-                elif event.key == pygame.K_UP:
+                if event.key == pygame.K_UP:
                     cambio = "UP"
-                elif event.key == pygame.K_DOWN:
+                if event.key == pygame.K_DOWN:
                     cambio = "DOWN"
+
+        # cambio += v_cambio
+
+        # if cambio == "RIGHT":
+        #     v_cambio += 0.000008
+        # if cambio == "LEFT":
+        #     v_cambio -= 0.000008
+        # if cambio == "UP":
+        #     v_cambio -= 0.000008
+        # if cambio == "DOWN":
+        #     v_cambio += 0.000008
+
+        # snake_coordinates[0] += v_cambio
                     
         if cambio == "RIGHT":
             snake_coordinates[0] += 10
-        elif cambio == "LEFT":
+        if cambio == "LEFT":
             snake_coordinates[0] -= 10
-        elif cambio == "UP":
+        if cambio == "UP":
             snake_coordinates[1] -= 10
-        elif cambio == "DOWN":
+        if cambio == "DOWN":
             snake_coordinates[1] += 10
 
         snake_body.insert(0, list(snake_coordinates))
 
         if snake_coordinates == pos_fruta:
             pos_fruta = posicion_fruta()
-            puntuacion()
+            puntaje += 1
+            print(puntaje)
         else:
             snake_body.pop()
+
 
         cabeza = snake_body[-1]
         for i in range(len(snake_body) - 1):
@@ -81,11 +96,14 @@ def principal():
             pygame.draw.rect(superficie_juego,(200,200,200), pygame.Rect(pos[0], pos[1], 10, 10))
 
         pygame.draw.rect(superficie_juego,(169,6,6), pygame.Rect(pos_fruta[0], pos_fruta[1], 10, 10))
-
-        text = font.render(puntuacion(),0,(200,60,80))
+        
+        text = font.render(str(puntaje),0,(200,60,80))
         superficie_juego.blit(text, (480,20))
 
-
+        if puntaje < 10:
+            fps.tick(10)
+        if puntaje >= 10:
+            fps.tick(20)
 
         if snake_coordinates[0] <= 0 or snake_coordinates[0] >= 500:
             run = False
@@ -100,5 +118,4 @@ def principal():
 principal()
 
 pygame.quit()
-
 
