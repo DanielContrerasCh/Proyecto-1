@@ -1,9 +1,11 @@
+#hay que correr "pip install pygame" y "pip install replit" en la consola para poder importar pygame, 
 #librerías necesarias
-import pygame, sys, time, random
+import pygame, sys, time, random, replit
 
 #Estado inicial
 pygame.init()
 superficie_juego= pygame.display.set_mode((500,500))
+loading_screen = pygame.display.set_mode((500,500))
 
 font = pygame.font.Font(None, 30)
 
@@ -18,23 +20,42 @@ def posicion_fruta():
     pos_fruta = [posicion_random, posicion_random]
     return pos_fruta
 
-def puntuacion(puntaje):
-    puntaje += 1
-    if puntaje < 10:
-        fps.tick(10)
-    if puntaje >= 10:
-        fps.tick(20)
-    return puntaje
+def puntuacion(score):
+    score += 1
+    return score
+
+def loading(percent):
+    for i in range(100):
+        replit.clear()
+        percent +=1
+        bienvenida = print("""
+    Pantalla de carga
+    En el juego, utiliza las flechas para moverte\n
+
+    Estatus: cargando
+    %"""+ str(percent)
+            )
+        time.sleep(.05)
+
+    carga = font.render(str(percent),0,(200,60,80))
+    loading_screen.blit(carga, (480,20))
+        
+    terminado = print("!Carga completa!\n")
+    return percent, terminado, bienvenida
+
 
 
 def principal():
 
+    percent = 0
     snake_coordinates =[200,100]
     snake_body = [[100,50],[90,50],[80,50]]
     pos_fruta = posicion_fruta()
     cambio = "RIGHT"
     run = True
-    puntaje = 0
+    score = 0
+
+    loading(percent)
 
     while run:
         for event in pygame.event.get():
@@ -60,10 +81,16 @@ def principal():
             snake_coordinates[1] += 10
 
         snake_body.insert(0, list(snake_coordinates))
+        if score < 5:
+            fps.tick(20)
+        elif score >=5:
+            fps.tick(30)
+        elif score >= 10:
+            fps.tick(40)
 
         if snake_coordinates == pos_fruta:
             pos_fruta = posicion_fruta()
-            score = puntuacion(puntaje)
+            score = puntuacion(score)
         else:
             snake_body.pop()
 
@@ -72,7 +99,7 @@ def principal():
             part = snake_body[i]
             if cabeza[0] == part[0] and cabeza[1] == part[1]:
                 run = False
-                print("Perdiste")
+                print("PERDISTE")
 
         superficie_juego.fill((0,0,0))
 
@@ -83,15 +110,17 @@ def principal():
 
         text = font.render(str(score),0,(200,60,80))
         superficie_juego.blit(text, (480,20))
+        # carga = font.render(str(percent),0,(200,60,80))
+        # superficie_juego.blit(carga, (250,250))
 
 
 
         if snake_coordinates[0] <= 0 or snake_coordinates[0] >= 500:
             run = False
-            print("YOU LOSE")
+            print("PERDISTE")
         if snake_coordinates[1] <= 0 or snake_coordinates[1] >= 500:
             run = False
-            print("YOU LOSE")
+            print("PERDISTE")
 
 
         pygame.display.flip()
