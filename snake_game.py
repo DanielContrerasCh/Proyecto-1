@@ -1,19 +1,43 @@
 #hay que correr "pip install pygame" y "pip install replit" en la consola para poder importar pygame, 
 #librerías necesarias
-import pygame, sys, time, random, replit
+import pygame, time, replit,random, sys
 
-#Estado inicial
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+GRAY = (200, 200, 200)
+PERRY = (72, 201, 176)
+WHITE = (244, 246, 247)
+fps = pygame.time.Clock()
+
 pygame.init()
-superficie_juego= pygame.display.set_mode((500,500))
-loading_screen = pygame.display.set_mode((500,500))
+
+superficie_juego = pygame.display.set_mode((500,500))
+pygame.display.set_caption("Menú")
+
+font2 = pygame.font.SysFont(None, 30)
+
+text = font2.render("Bienvenido a Snake game", True, RED)
+rect = text.get_rect()
+
+instru = font2.render("Dentro del juego", True, RED)
+
+instru2 = font2.render("Utiliza las flechas para moverte", True, RED)
+
+instru3 = font2.render("Presiona espacio para empezar", True, WHITE)
+rect = instru3.get_rect()
+pygame.draw.rect(instru3, GRAY, rect, 1)
+
+puntuacion_prev = font2.render("Puntuación previa:", True, PERRY)
+rect = puntuacion_prev.get_rect()
+pygame.draw.rect(puntuacion_prev, GRAY, rect, 1)
 
 font = pygame.font.Font(None, 30)
 
 fps = pygame.time.Clock()
-    # print("Bienvenidos al juego de la serpiente, usa las flechas para moverte")
-    # print("presione una flecha para empezar")
 
-#coordenadas y valores iniciales
+
 def posicion_fruta():
 
     posicion_random = random.randint (0,49)*10
@@ -28,25 +52,18 @@ def loading(percent):
     for i in range(100):
         replit.clear()
         percent +=1
-        bienvenida = print("""
-    Pantalla de carga
-    En el juego, utiliza las flechas para moverte\n
-
-    Estatus: cargando
-    %"""+ str(percent)
+        print("""Snake game\nEstatus: cargando %"""+ str(percent)
             )
-        time.sleep(.05)
-
-    carga = font.render(str(percent),0,(200,60,80))
-    loading_screen.blit(carga, (480,20))
-        
-    terminado = print("!Carga completa!\n")
-    return percent, terminado, bienvenida
-
+        time.sleep(.03)
+  
+    print("!Carga completa!\n")
+    time.sleep(.5)
+    return percent
 
 
 def principal():
 
+    valores_vel=[[15,20],[25,30]]
     percent = 0
     snake_coordinates =[200,100]
     snake_body = [[100,50],[90,50],[80,50]]
@@ -60,7 +77,7 @@ def principal():
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run = False
+                sys.exit
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     cambio = "RIGHT"
@@ -82,11 +99,13 @@ def principal():
 
         snake_body.insert(0, list(snake_coordinates))
         if score < 5:
-            fps.tick(20)
-        elif score >=5:
-            fps.tick(30)
-        elif score >= 10:
-            fps.tick(40)
+            fps.tick(valores_vel[0][0])
+        elif score >=5 and score<10:
+            fps.tick(valores_vel[0][1])
+        elif score >= 10 and score < 15:
+            fps.tick(valores_vel[1][0])
+        elif score >= 15 and score < 20:
+            fps.tick(valores_vel[1][1])
 
         if snake_coordinates == pos_fruta:
             pos_fruta = posicion_fruta()
@@ -100,7 +119,8 @@ def principal():
             if cabeza[0] == part[0] and cabeza[1] == part[1]:
                 run = False
                 print("PERDISTE")
-
+                menu(superficie_juego, text, instru, instru2, instru3)
+                
         superficie_juego.fill((0,0,0))
 
         for pos in snake_body:
@@ -108,25 +128,46 @@ def principal():
 
         pygame.draw.rect(superficie_juego,(169,6,6), pygame.Rect(pos_fruta[0], pos_fruta[1], 10, 10))
 
-        text = font.render(str(score),0,(200,60,80))
+        text = font.render(str(score),0,PERRY)
         superficie_juego.blit(text, (480,20))
-        # carga = font.render(str(percent),0,(200,60,80))
-        # superficie_juego.blit(carga, (250,250))
-
-
 
         if snake_coordinates[0] <= 0 or snake_coordinates[0] >= 500:
             run = False
             print("PERDISTE")
+
+            menu(superficie_juego, text, instru, instru2, instru3)  
         if snake_coordinates[1] <= 0 or snake_coordinates[1] >= 500:
             run = False
             print("PERDISTE")
-
+            menu(superficie_juego, text, instru, instru2, instru3)
 
         pygame.display.flip()
 
-principal()
+def menu(superficie_juego, text, instru, instru2, instru3):
+    run2 = True
+    background = BLACK
 
-pygame.quit()
 
+    while run2:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        run2 = False
+
+        superficie_juego.fill(background)
+        superficie_juego.blit(text, (120, 50))
+        superficie_juego.blit(instru, (170, 200))    
+        superficie_juego.blit(instru2, (100, 225))    
+        superficie_juego.blit(instru3, (100, 400))  
+        superficie_juego.blit(puntuacion_prev, (20, 20)) 
+        pygame.display.update()
+    
+    principal()
+
+
+menu(superficie_juego, text, instru, instru2, instru3)
+
+pygame.quit
 
