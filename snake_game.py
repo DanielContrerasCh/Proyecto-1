@@ -2,12 +2,17 @@
 #librerías necesarias
 import pygame, time, replit,random, sys
 
+color_s = input("Elige el color de tu serpiente (RED,GREEN,BLUE,GRAY,WHITE)")
+color_m = input("Elige el color de la manzana (RED,GREEN,BLUE,GRAY,WHITE)")
+
+
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 GRAY = (200, 200, 200)
 PERRY = (72, 201, 176)
+CLEARGRAY = (229, 232, 232)
 WHITE = (244, 246, 247)
 fps = pygame.time.Clock()
 
@@ -60,6 +65,13 @@ def loading(percent):
     time.sleep(.5)
     return percent
 
+def cuadricula(superficie_juego):
+    square = 10
+    for i in range(0, 500, square):
+        for j in range(0, 500, square):
+            grid = pygame.Rect(i, j, square, square)
+    pygame.draw.rect(superficie_juego, CLEARGRAY, grid, 1)
+
 
 def principal():
 
@@ -75,6 +87,7 @@ def principal():
     loading(percent)
 
     while run:
+        cuadricula(superficie_juego)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit
@@ -124,9 +137,9 @@ def principal():
         superficie_juego.fill((0,0,0))
 
         for pos in snake_body:
-            pygame.draw.rect(superficie_juego,(200,200,200), pygame.Rect(pos[0], pos[1], 10, 10))
+            pygame.draw.rect(superficie_juego,color_s, pygame.Rect(pos[0], pos[1], 10, 10))
 
-        pygame.draw.rect(superficie_juego,(169,6,6), pygame.Rect(pos_fruta[0], pos_fruta[1], 10, 10))
+        pygame.draw.rect(superficie_juego,color_m, pygame.Rect(pos_fruta[0], pos_fruta[1], 10, 10))
 
         text = font.render(str(score),0,PERRY)
         superficie_juego.blit(text, (480,20))
@@ -140,7 +153,7 @@ def principal():
             run = False
             print("PERDISTE")
             menu(superficie_juego, text, instru, instru2, instru3)
-
+        
         pygame.display.flip()
 
 def menu(superficie_juego, text, instru, instru2, instru3):
@@ -163,7 +176,7 @@ def menu(superficie_juego, text, instru, instru2, instru3):
         superficie_juego.blit(instru3, (100, 400))  
         superficie_juego.blit(puntuacion_prev, (20, 20)) 
         pygame.display.update()
-    
+
     principal()
 
 
