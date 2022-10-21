@@ -76,6 +76,9 @@ Var coordenadas_manzana:
     
        coordenadas_cabeza_snake = afuera de area_de_juego
 
+## Condiciones necesarias para poder correr el código
+En mi código hice uso de las librerías "pygame", "time","replit","random" y "sys". Para que puedan funcionar los módulos se necesitan instalar desde la terminal pygame y replit. Por lo tanto, ecribir en la terminal "pip install pygame" y "pip install replit" es necesario para que funcione.
+
 
   
 
