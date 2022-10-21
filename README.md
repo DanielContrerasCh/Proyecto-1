@@ -79,9 +79,6 @@ Var coordenadas_manzana:
 ## Referencias
 Para el funcionamiento general y ver cómo funciona pygame, me basé en el código de: https://github.com/syscurso/pygame/commit/d68f4e35cf66206b44ac6ac3d36cf567fb664df2
 
-Para la pantalla de carga: 
-https://stackoverflow.com/questions/34986655/how-to-code-loading-screen
-
 ## Instrucciones
 En mi código hice uso de las librerías "pygame", "time","replit","random" y "sys". Para que puedan funcionar los módulos se necesitan instalar desde la terminal pygame y replit. Por lo tanto, ecribir en la terminal "pip install pygame" y "pip install replit" es necesario para que funcione.
 
